@@ -1,0 +1,42 @@
+# _*_coding:utf-8 _*_
+class HtmlOutPuter(object):
+    def __init__(self):
+        self.datas = []  #用列表来维护收集好的数据
+
+    def collect_data(self,data):
+        if data is None:
+            return
+        self.datas.append(data)
+
+    def output_html(self):
+        fout = open('output.html','w')
+        fout.write("<html>")
+        fout.write("<body>")
+        fout.write("<table>")   #把数据作为一个表格输出
+
+        for data in self.datas:
+            fout.write("<tr>")   #tr为行标签
+            fout.write("<td>%s</td>"%data['url'].encode('utf-8'))   #输出每个单元格的内容,输出data的url
+            fout.write("<td>%s</td>" % data['title'].encode('utf-8'))
+            fout.write("<td>%s</td>" % data['summary'].encode('utf-8'))
+            fout.write("</tr>")
+
+        fout.write("</table>")
+        fout.write("</body>")
+        fout.write("</html>")
+
+        fout.close()
+
+#python默认编码格式为ASCII
+
+
+
+
+
+
+'''
+html输出器中需要两个方法，第一个方法collect_data用来收集数据，第二个方法output_html
+用来将收集好的数据输出到一个html文件中，打开这个页面就能看到所有收集好的数据
+
+
+'''

@@ -1,0 +1,50 @@
+# _*_coding:utf-8 _*_
+from spider_test import url_manager, html_downloader, html_parser, html_output
+
+
+class SpiderMain():
+    def __init__(self):    #定义函数初始化各个对象
+        self.urls = url_manager.UrlManager()  #urls作为url的管理器
+        self.downloader = html_downloader.HtmlDownLoader()   #url的下载器
+        self.parser = html_parser.HtmlParser()  #url的解析器
+        self.outputer = html_output.HtmlOutPuter()  #url的输出器
+
+
+    def craw(self,root_url):        #craw方法为爬虫的调度程序
+        count =1
+        self.urls.add_new_url(root_url)   #将入口url添加到url管理器
+
+
+        while self.urls.has_new_url():
+            try:
+                new_url = self.urls.get_new_url()  # 当url管理器中有待爬取得url时，获取一个待爬取的url
+                #注意方法要用（）
+
+                print "craw  %d : %s" % (count, new_url)  # 看输出的是第几个url
+                html_cont = self.downloader.download(new_url)  # 启动下载器下载new_url
+                new_urls,new_data = self.parser.parse(new_url,html_cont)      # 解析器解析之后有新的url列表和新的数据
+                self.urls.add_new_urls(new_urls)         #将新的url传进url管理器
+                self.outputer.collect_data(new_data)   #将新的数据收集传进outputer输出器中
+
+                if count ==50:
+                    break
+
+                count+=1
+            except:
+                print 'craw failed'
+
+        self.outputer.output_html()    #输出收集好的数据
+'''
+while循环里为爬虫的步骤
+第一步，如果有待爬取的url，娶一个出来
+第二步，下载对应的页面数据
+第三步，下载好之后进行页面的解析，解析之后得到新的url列表和数据
+第四步，将新的url补进url管理器，同时进行数据的收集
+
+'''
+
+
+if __name__ == "__main__":
+     root_url="https://baike.baidu.com/item/Python/407313?fr=aladdin"  #入口url
+     obj_spider = SpiderMain()
+     obj_spider.craw(root_url)  #用python的craw方法启动爬虫
