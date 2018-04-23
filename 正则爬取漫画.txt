@@ -1,0 +1,14 @@
+import urllib2
+import re
+ma1= urllib2.urlopen('http://www.shenmanhua.com') #»ñÈ¡ÍøÒ³ÄÚÈİ
+ma = ma1.read()
+listurl = re.findall(r'http:.{5,44}\.jpg',ma)
+print listurl
+i=0
+for url in listurl:
+    f=open('D:\\abc\\'+str(i)+'.jpg','wb')
+    req = urllib2.urlopen(url)
+    buf = req.read()
+    f.write(buf)
+    i+=1
+f.close()
